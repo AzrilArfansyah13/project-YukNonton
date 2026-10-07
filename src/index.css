@@ -10,3 +10,43 @@
     transform-style: preserve-3d;
   }
 }
+
+/* Ticket flies from right side to center */
+@keyframes flyToCenter {
+  0% {
+    opacity: 0;
+    transform: translate(30vw, 10vh) scale(0.6) rotate(10deg);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1.1) rotate(0deg);
+  }
+}
+
+.animate-fly-to-center {
+  animation: flyToCenter 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Tear animations for top and bottom parts */
+@keyframes tearTop {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  80% { opacity: 0; }
+  100% { transform: translateY(-80px) rotate(-4deg); opacity: 0; }
+}
+
+@keyframes tearBottom {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  80% { opacity: 0; }
+  100% { transform: translateY(80px) rotate(6deg); opacity: 0; }
+}
+
+.animate-tear-top {
+  animation: tearTop 0.7s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+
+.animate-tear-bottom {
+  animation: tearBottom 0.7s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}

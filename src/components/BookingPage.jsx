@@ -3,8 +3,8 @@ import SeatPicker from './SeatPicker';
 import TicketPreview from './TicketPreview';
 
 const movies = [
-  { id: 1, title: 'Dune: Part Two', price: 45000 },
-  { id: 2, title: 'Oppenheimer', price: 50000 },
+  { id: 1, title: 'Oppenheimer', price: 45000 },
+  { id: 2, title: 'Spider-Man: Brand New Day', price: 50000 },
   { id: 3, title: 'Interstellar (Re-issue)', price: 40000 },
 ];
 
@@ -37,7 +37,7 @@ const BookingPage = () => {
   const [popcorn, setPopcorn] = useState({ flavor: '', size: '' });
   const [beverage, setBeverage] = useState({ flavor: '', size: '' });
 
-  const [isTorn, setIsTorn] = useState(false);
+  const [animStage, setAnimStage] = useState('idle'); // 'idle', 'flying', 'tearing', 'done'
   const [showModal, setShowModal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); // controls CSS transition in
 
@@ -70,19 +70,25 @@ const BookingPage = () => {
       return;
     }
 
-    // 1. Trigger tear animation
-    setIsTorn(true);
+    // 1. Trigger ticket flying to center
+    setAnimStage('flying');
 
-    // 2. After tear animation finishes (~1.5s), mount modal then trigger fade-in
+    // 2. After flying finishes (~0.8s), start tear animation
     setTimeout(() => {
-      setShowModal(true);
-      // Small delay so the DOM mounts before we toggle the CSS transition class
-      requestAnimationFrame(() => {
+      setAnimStage('tearing');
+      
+      // 3. After tearing finishes (~0.7s), mount modal then trigger fade-in
+      setTimeout(() => {
+        setAnimStage('done');
+        setShowModal(true);
+        // Small delay so the DOM mounts before we toggle the CSS transition class
         requestAnimationFrame(() => {
-          setModalVisible(true);
+          requestAnimationFrame(() => {
+            setModalVisible(true);
+          });
         });
-      });
-    }, 1500);
+      }, 700);
+    }, 800);
   };
 
   const handleBookAnother = () => {
@@ -91,7 +97,7 @@ const BookingPage = () => {
     setTimeout(() => {
       setShowModal(false);
       // Reset all form state
-      setIsTorn(false);
+      setAnimStage('idle');
       setSelectedMovie(movies[0]);
       setSelectedTime(showTimes[0]);
       setSelectedSeats([]);
@@ -297,7 +303,7 @@ const BookingPage = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isTorn || selectedSeats.length === 0 || !customerName}
+              disabled={animStage !== 'idle' || selectedSeats.length === 0 || !customerName}
               className={`w-full py-4 rounded-xl font-bold text-lg uppercase tracking-widest transition-all duration-300 relative overflow-hidden group
                 ${(selectedSeats.length === 0 || !customerName)
                   ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
@@ -305,7 +311,7 @@ const BookingPage = () => {
               `}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
-                {isTorn ? 'Processing...' : `Book Now - ${formatIDR(totalPrice)}`}
+                {animStage !== 'idle' ? 'Processing...' : `Book Now - ${formatIDR(totalPrice)}`}
               </span>
               <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-30 group-hover:animate-shine" />
             </button>
@@ -322,7 +328,7 @@ const BookingPage = () => {
             price={totalPrice}
             popcorn={popcorn}
             beverage={beverage}
-            isTorn={isTorn}
+            animStage={animStage}
           />
         </div>
       </div>
