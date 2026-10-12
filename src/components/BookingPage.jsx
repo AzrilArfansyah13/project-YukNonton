@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SeatPicker from './SeatPicker';
 import TicketPreview from './TicketPreview';
-import BookingConfirmationModal from './BookingConfirmationModal';
+import SuccessPage from './SuccessPage';
 
 const movies = [
   { id: 1, title: 'Oppenheimer', price: 45000 },
@@ -331,7 +331,7 @@ const BookingPage = () => {
       </div>
 
       {/* Confirmation Modal Component */}
-      <BookingConfirmationModal
+      <SuccessPage
         isOpen={showModal}
         isVisible={modalVisible}
         customerName={customerName}

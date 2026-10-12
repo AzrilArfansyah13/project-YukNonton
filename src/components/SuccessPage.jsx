@@ -4,7 +4,7 @@ const formatIDR = (price) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
 };
 
-const BookingConfirmationModal = ({
+const SuccessPage = ({
   isOpen,
   isVisible,
   customerName,
@@ -97,4 +97,4 @@ const BookingConfirmationModal = ({
   );
 };
 
-export default BookingConfirmationModal;
+export default SuccessPage;
